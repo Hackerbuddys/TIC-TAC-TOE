@@ -2,8 +2,11 @@ import React, { useRef, useState } from "react";
 import "./TicTacToe.css";
 import circle_icon from "../Assets/circle.png";
 import cross_icon from "../Assets/cross.png";
+import tictactoeSound from "../Assets/tictactoe.wav";
 
-let data = ["", "", "", "", "", "", "", "", ""]; // 2D array to store the
+const audio = new Audio(tictactoeSound);
+
+let data = ["", "", "", "", "", "", "", "", ""]; // 2D array to store the game state
 
 function TicTacToe() {
   let [count, setCount] = useState(0);
@@ -22,8 +25,9 @@ function TicTacToe() {
   let box_array = [box1, box2, box3, box4, box5, box6, box7, box8, box9];
 
   const toggle = (e, num) => {
-    if (lock) {
-      return 0;
+    if (lock || data[num] !== "") {
+      // Check if the game is locked or box is already clicked
+      return;
     }
     if (count % 2 === 0) {
       e.target.innerHTML = `<img src='${cross_icon}'/>`;
@@ -35,6 +39,7 @@ function TicTacToe() {
       setCount(++count);
     }
     checkWin();
+    playSound(); // Play sound after each move
   };
 
   const checkWin = () => {
@@ -75,6 +80,11 @@ function TicTacToe() {
     box_array.map((e) => {
       e.current.innerHTML = "";
     });
+    window.location.reload();
+  };
+
+  const playSound = () => {
+    audio.play();
   };
 
   return (
